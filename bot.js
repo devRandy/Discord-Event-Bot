@@ -1,90 +1,71 @@
-var Discord = require('discord.io');
-var logger = require('winston');
-var auth = require('./auth.json');
-var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
-var specialsJson = [];
+// Require the necessary discord.js classes
+const fs = require('node:fs');
+const path = require('node:path');
+const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
+const { token } = require('./auth.json');
 
-// Configure logger settings
-logger.remove(logger.transports.Console);
-logger.add(new logger.transports.Console, {
-    colorize: true
-});
-logger.level = 'debug';
-// Initialize Discord Bot
-var bot = new Discord.Client({
-    token: auth.token,
-    autorun: true
-});
+// Create a new client instance
+const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
-bot.on('ready', function (evt) {
-    logger.info('Logged in as: ');
-    logger.info(bot.username + ' - (' + bot.id + ')');
+client.commands = new Collection();
 
-    // console.log(bot.users);
+// When the client is ready, run this code (only once).
+// The distinction between `client: Client<boolean>` and `readyClient: Client<true>` is important for TypeScript developers.
+// It makes some properties non-nullable.
+client.once(Events.ClientReady, readyClient => {
+	console.log(`Ready! Logged in as ${readyClient.user.tag}`);
 });
 
-// const server = bot.guilds.get(message.guild.id).id;
+// Log in to Discord with your client's token
+client.login(token);
 
+// dynamically retrieve your command files
+const foldersPath = path.join(__dirname, 'commands');
+const commandFolders = fs.readdirSync(foldersPath);
 
-bot.on('message', function (user, userID, channelID, message, evt) {
-    // Our bot needs to know if it will execute a command
-    // It will listen for messages that will start with `!`
-    if (message.substring(0, 1) == '!') {
-        var args = message.substring(1).split(' ');
-        var cmd = args[0];
+for (const folder of commandFolders) {
+	const commandsPath = path.join(foldersPath, folder);
+	const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+	for (const file of commandFiles) {
+		const filePath = path.join(commandsPath, file);
+		const command = require(filePath);
+		// Set a new item in the Collection with the key as the command name and the value as the exported module
+		if ('data' in command && 'execute' in command) {
+			client.commands.set(command.data.name, command);
+		} else {
+			console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
+		}
+	}
+}
 
-        switch (cmd) {
-            // !ping
-            case 'ping':
-                bot.sendMessage({
-                    to: channelID,
-                    message: 'Pong!'
-                });
-                break;
-
-            case 'event':
-                args = args.splice(1);
-                var eventDetails = args.join(' ');
-                eventDetails = eventDetails.split(';', 4);
-                console.log(eventDetails.length);
-                if (eventDetails.length == 4) {
-                    console.log('events call: ' + args);
-                    bot.sendMessage({
-                        to: "555224847991439362", // events channel
-                        // to: "563555502387232768",    // bot-test channel
-                        message:
-                            "`Event Name:` " + eventDetails[0] + " \n" +
-                            "`Date and Time:` " + eventDetails[1] + " \n" +
-                            "`Address:` " + eventDetails[2] + " \n" +
-                            "`Description:` " + eventDetails[3] + " \n" +
-                            "`Brought to you By:` " + user + " \n"
-                    });
-                } else {
-                    bot.sendMessage({
-                        to: channelID,
-                        message: "Example: \n !event [Event Title] ; [Date and Time] ; [Address/Location] ; [Event Description]"
-                    });
-                }
-                break;
-
-            case 'help':
-                console.log('help call');
-                bot.sendMessage({
-                    to: channelID,
-                    message: "Example: \n !event [Event Title] ; [Date and Time] ; [Address/Location] ; [Event Description]"
-                });
-                break;
-            default:
-                bot.sendMessage({
-                    to: channelID,
-                    message: "Example: \n !event [Event Title] ; [Date and Time] ; [Address/Location] ; [Event Description]"
-                });
-        }
-    }
+//command interactions
+client.on(Events.InteractionCreate, interaction => {
+	console.log(interaction);
 });
 
-bot.on('guildMemberAdd', (guildMember) => {
-    guildMember.addRole(guildMember.guild.roles.find(
-        role => role.name === "Friends"));
-})
+client.on(Events.InteractionCreate, interaction => {
+	if (!interaction.isChatInputCommand()) return;
+	console.log(interaction);
+});
 
+client.on(Events.InteractionCreate, async interaction => {
+	if (!interaction.isChatInputCommand()) return;
+
+	const command = interaction.client.commands.get(interaction.commandName);
+
+	if (!command) {
+		console.error(`No command matching ${interaction.commandName} was found.`);
+		return;
+	}
+
+	try {
+		await command.execute(interaction);
+	} catch (error) {
+		console.error(error);
+		if (interaction.replied || interaction.deferred) {
+			await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
+		} else {
+			await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+		}
+	}
+});
