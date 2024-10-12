@@ -72,17 +72,6 @@ client.on(Events.InteractionCreate, async interaction => {
 	}
 });
 
-// method to convert date values to cron expressions
-const dateToCron = (date) => {
-    const minutes = date.getMinutes();
-    const hours = date.getHours();
-    const days = date.getDate();
-    const months = date.getMonth() + 1;
-    const dayOfWeek = date.getDay();
-
-    return `${minutes} ${hours} ${days} ${months} ${dayOfWeek}`;
-};
-
 function scheduleMessage() {
         const channel = client.channels.cache.get('563555502387232768');
         cron.schedule("0 8 * * 1", function() { 
