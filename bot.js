@@ -3,6 +3,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
 const { token } = require('./auth.json');
+const cron = require("node-cron"); 
 
 // Create a new client instance
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
@@ -14,6 +15,7 @@ client.commands = new Collection();
 // It makes some properties non-nullable.
 client.once(Events.ClientReady, readyClient => {
 	console.log(`Ready! Logged in as ${readyClient.user.tag}`);
+    scheduleMessage("element.title", "element.readabledate");
 });
 
 // Log in to Discord with your client's token
@@ -69,3 +71,30 @@ client.on(Events.InteractionCreate, async interaction => {
 		}
 	}
 });
+
+// method to convert date values to cron expressions
+const dateToCron = (date) => {
+    const minutes = date.getMinutes();
+    const hours = date.getHours();
+    const days = date.getDate();
+    const months = date.getMonth() + 1;
+    const dayOfWeek = date.getDay();
+
+    return `${minutes} ${hours} ${days} ${months} ${dayOfWeek}`;
+};
+
+function scheduleMessage() {
+        const channel = client.channels.cache.get('563555502387232768');
+        cron.schedule("0 8 * * 1", function() { 
+            console.log("running a task every monday at 8am"); 
+        }); 
+        cron.schedule("0 16 * * 1", function() { 
+            console.log("running a task every monday at 4pm"); 
+        }); 
+        cron.schedule("*/10 * * * * *", function() { 
+            channel.send({
+                content: '<@&1208516988285227068> gamer time!',
+                allowedMentions: { roles: ['1208516988285227068'] },
+            });
+        }); 
+}
