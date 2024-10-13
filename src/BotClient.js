@@ -1,18 +1,15 @@
-const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
-const { token } = require('../auth.json');
+const { Client, Collection, Events, GatewayIntentBits, REST, Routes } = require('discord.js');
+const { clientId, guildId, token } = require('../auth.json');
 const cron = require("node-cron");
 const { CHANNELS } = require('./constants');
 const { BotUtils } = require('./Utils');
 
 class BotClient extends Client {
+    commandList;
 
     constructor() {
         super({ intents: [GatewayIntentBits.Guilds] });
         this.init();
-    }
-
-    getClient() {
-        return this;
     }
 
     init() {
@@ -21,14 +18,18 @@ class BotClient extends Client {
             // this.scheduleMessage("element.title", "element.readabledate");
         });
         this.login(token);
-        this.setCommands();
+        this.setCommandList(BotUtils.getCommands());
+        this.setCommands(this.commandList);
         this.setCommandEventListner();
     }
 
-    setCommands() {
+    setCommandList(commandList) {
+        this.commandList = commandList
+    }
+
+    setCommands(commandList) {
         this.commands = new Collection();
-        const commandList = BotUtils.getCommands();
-        for(let command of commandList) {
+        for (let command of commandList) {
             this.commands.set(command.data.name, command);
         }
     }
@@ -81,6 +82,26 @@ class BotClient extends Client {
                 allowedMentions: { roles: ['1208516988285227068'] },
             });
         });
+    }
+
+    async pushCommands() {
+        const rest = new REST().setToken(token);
+        const commands = [];
+        for (let command of this.commandList) {
+            commands.push(command.data.toJSON());
+        }
+        try {
+            console.log(`Started refreshing ${commands.length} application (/) commands.`);
+            // The put method is used to fully refresh all commands in the guild with the current set
+            const data = await rest.put(
+                Routes.applicationGuildCommands(clientId, guildId),
+                { body: commands },
+            );
+            console.log(`Successfully reloaded ${data.length} application (/) commands.`);
+        } catch (error) {
+            // And of course, make sure you catch and log any errors!
+            console.error(error);
+        }
     }
 }
 
