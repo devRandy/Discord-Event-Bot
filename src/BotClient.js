@@ -1,48 +1,36 @@
-const fs = require('node:fs');
-const path = require('node:path');
-const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
-const { token } = require('../auth.json');
+const { Client, Collection, Events, GatewayIntentBits, REST, Routes } = require('discord.js');
+const { clientId, guildId, token } = require('../auth.json');
 const cron = require("node-cron");
 const { CHANNELS } = require('./constants');
+const { BotUtils } = require('./Utils');
 
 class BotClient extends Client {
+    commandList;
 
     constructor() {
         super({ intents: [GatewayIntentBits.Guilds] });
         this.init();
     }
 
-    getClient() {
-        return this;
-    }
-
     init() {
-        this.commands = new Collection();
         this.once(Events.ClientReady, readyClient => {
             console.log(`Ready! Logged in as ${readyClient.user.tag}`);
-            this.scheduleMessage("element.title", "element.readabledate");
+            // this.scheduleMessage("element.title", "element.readabledate");
         });
         this.login(token);
-        this.setCommands();
+        this.setCommandList(BotUtils.getCommands());
+        this.setCommands(this.commandList);
         this.setCommandEventListner();
     }
 
-    setCommands() {
-        const foldersPath = path.join(__dirname, 'commands');
-        const commandFolders = fs.readdirSync(foldersPath);
-        for (const folder of commandFolders) {
-            const commandsPath = path.join(foldersPath, folder);
-            const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
-            for (const file of commandFiles) {
-                const filePath = path.join(commandsPath, file);
-                const command = require(filePath);
-                // Set a new item in the Collection with the key as the command name and the value as the exported module
-                if ('data' in command && 'execute' in command) {
-                    this.commands.set(command.data.name, command);
-                } else {
-                    console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
-                }
-            }
+    setCommandList(commandList) {
+        this.commandList = commandList
+    }
+
+    setCommands(commandList) {
+        this.commands = new Collection();
+        for (let command of commandList) {
+            this.commands.set(command.data.name, command);
         }
     }
 
@@ -94,6 +82,26 @@ class BotClient extends Client {
                 allowedMentions: { roles: ['1208516988285227068'] },
             });
         });
+    }
+
+    async pushCommands() {
+        const rest = new REST().setToken(token);
+        const commands = [];
+        for (let command of this.commandList) {
+            commands.push(command.data.toJSON());
+        }
+        try {
+            console.log(`Started refreshing ${commands.length} application (/) commands.`);
+            // The put method is used to fully refresh all commands in the guild with the current set
+            const data = await rest.put(
+                Routes.applicationGuildCommands(clientId, guildId),
+                { body: commands },
+            );
+            console.log(`Successfully reloaded ${data.length} application (/) commands.`);
+        } catch (error) {
+            // And of course, make sure you catch and log any errors!
+            console.error(error);
+        }
     }
 }
 
