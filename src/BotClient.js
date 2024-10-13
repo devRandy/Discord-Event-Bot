@@ -20,7 +20,7 @@ class BotClient extends Client {
         this.commands = new Collection();
         this.once(Events.ClientReady, readyClient => {
             console.log(`Ready! Logged in as ${readyClient.user.tag}`);
-            this.scheduleMessage("element.title", "element.readabledate");
+            // this.scheduleMessage("element.title", "element.readabledate");
         });
         this.login(token);
         this.setCommands();
