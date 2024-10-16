@@ -6,7 +6,7 @@ const path = require("path");
 async function getImage(url, fileName) {
     try {
         const imageResponse = await fetch(url);
-        if (!fs.existsSync("downloads")) await mkdir("downloads"); 
+        if (!fs.existsSync("downloads")) await mkdir("downloads");
         const destination = path.resolve("./downloads", fileName);
         const fileStream = fs.createWriteStream(destination, { flags: 'wx' });
         await finished(Readable.fromWeb(imageResponse.body).pipe(fileStream));
