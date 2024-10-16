@@ -8,3 +8,10 @@ Requires Minumum node version 18
 
 ## Run
 1. Run `node .`
+
+## Images Script
+
+To perform a scrape of the card images, you can utilize the get-images.js to scrape the URL and download to your
+local repo.
+
+Run `npm run images`
