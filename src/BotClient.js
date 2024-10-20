@@ -3,9 +3,6 @@ const { clientId, guildId, token } = require('../auth.json');
 const cron = require("node-cron");
 const { CHANNELS } = require('./constants');
 const { BotUtils } = require('./Utils');
-const { AttachmentBuilder } = require('discord.js');
-const { EmbedBuilder } = require('discord.js');
-
 
 class BotClient extends Client {
     commandList;
