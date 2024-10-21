@@ -1,8 +1,6 @@
 /**
  * Prototype for potential Node API, if it would be useful to split the logic out this way.
  */
-const {cardList} = require('../card-list/card-list');
-
 class GetCardsClient {
 
     list;
