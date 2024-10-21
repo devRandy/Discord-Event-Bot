@@ -219,8 +219,7 @@ sequelize.sync({ force }).then(async () => {
         CardData.upsert({ card_name: 'P Erikas Invitation', card_id: 203, card_rarity: 'Ultra'}),
         CardData.upsert({ card_name: 'P Giovannis Charisma', card_id: 204, card_rarity: 'Ultra'})
     ];
-
-
+    
 	await Promise.all(shop);
 	console.log('Database synced');
 
