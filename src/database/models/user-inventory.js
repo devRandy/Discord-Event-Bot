@@ -1,7 +1,7 @@
 module.exports = (sequelize, DataTypes) => {
-	return sequelize.define('user_item', {
+	return sequelize.define('user_inventory', {
 		user_id: DataTypes.STRING,
-		item_id: DataTypes.INTEGER,
+		card_id: DataTypes.INTEGER,
 		amount: {
 			type: DataTypes.INTEGER,
 			allowNull: false,

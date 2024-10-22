@@ -7,7 +7,7 @@ const sequelize = new Sequelize('database', 'username', 'password', {
 	storage: 'database.sqlite',
 });
 
-const CardData = require('./model/card-model.js')(sequelize, Sequelize.DataTypes);
+const CardData = require('../database/models/card-model.js')(sequelize, Sequelize.DataTypes);
 
 
 const force = process.argv.includes('--force') || process.argv.includes('-f');
@@ -219,7 +219,7 @@ sequelize.sync({ force }).then(async () => {
         CardData.upsert({ card_name: 'P Erikas Invitation', card_id: 203, card_rarity: 'Ultra'}),
         CardData.upsert({ card_name: 'P Giovannis Charisma', card_id: 204, card_rarity: 'Ultra'})
     ];
-    
+
 	await Promise.all(shop);
 	console.log('Database synced');
 
