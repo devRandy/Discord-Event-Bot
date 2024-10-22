@@ -1,6 +1,6 @@
 const RARITY_GROUP = {
-    ultra: 'Ultra Rare',
-    super: 'Super Rare',
+    ultra: 'Ultra',
+    super: 'Super',
     rare: 'Rare',
     uncommon: 'Uncommon',
     common: 'Common'
