@@ -1,3 +1,5 @@
+const { RARITY_GROUP } = require("../card-pack/rarity");
+
 /**
  * Prototype for potential Node API, if it would be useful to split the logic out this way.
  */
@@ -6,7 +8,7 @@ class GetCardsClient {
     list;
 
     constructor(){
-        this.list = [...cardList];
+        this.list = [new Card(1,"card one", RARITY_GROUP.common)];
     };
 
     getCardByName(name) {
