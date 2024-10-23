@@ -1,12 +1,6 @@
 const { BotClient } = require('./src/BotClient');
-const { CardClient } = require('./src/database/clients/card-client');
 
-// client = new BotClient();
-
-client = new CardClient();
-
-// client.getCardById(2);
-client.getAllCardsByRarity('Common');
+client = new BotClient();
 
 /**
  * Uncomment to publish new slash commands
