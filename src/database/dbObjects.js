@@ -39,6 +39,18 @@ try {
         },
     });
 
+    Reflect.defineProperty(Cards.prototype, 'getCommonCards', {
+        value: () => {
+            return Cards.findAll({
+                where: {card_rarity: 'Common' },
+            });
+        },
+    });
+
+
+
+  
+
     console.log('Succseful Database Sync');
 
 } catch (error) {

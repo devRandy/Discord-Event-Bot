@@ -11,3 +11,6 @@ class Card {
         this.cardRarity = rarity;
     }
 }
+
+
+module.exports = { Card};

@@ -1,17 +1,17 @@
+/**
+ * Allows a user to join the Collect Em' All game.
+ */
+
+
 const { SlashCommandBuilder } = require('discord.js');
-const { EmbedGenerator } = require('../../card-pack/embed-gen');
 
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('buypack')
-		.setDescription('Buys a basic pack of cards.'),
+		.setName('joingame')
+		.setDescription('Join the Collect Em All Discord game'),
 	async execute(interaction) {
-		//TODO: Check to see if users has correct amount of credits to purchase
-
-		const gen = new EmbedGenerator();
-		gen.getEmbededBasePack();
 		
-		await interaction.reply({embeds: [...gen.embeds], files: [...gen.files] });
+		await interaction.reply();
 	},
 };
