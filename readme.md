@@ -15,3 +15,9 @@ To perform a scrape of the card images, you can utilize the get-images.js to scr
 local repo.
 
 Run `npm run images`
+
+## Database Setup
+
+Event-Bot utilizes sqlite, which is a file-based relational database management system. To setup the database locally, please follow the steps outlined below:
+
+1. Run `npm run db:init` - this intializes the tables and populates them based on what is in the database-init.js

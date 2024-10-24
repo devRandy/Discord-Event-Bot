@@ -4,16 +4,22 @@ const sequelize = new Sequelize('database', 'username', 'password', {
 	host: 'localhost',
 	dialect: 'sqlite',
 	logging: false,
-	storage: 'database.sqlite',
+	storage: 'src/database/database.sqlite',
 });
 
-const CardData = require('./model/card-model.js')(sequelize, Sequelize.DataTypes);
+
+const CurrencyShop = require('./models/shop.js')(sequelize, Sequelize.DataTypes);
+const CardData = require('./models/card-model.js')(sequelize, Sequelize.DataTypes);
+require('./models/users.js')(sequelize, Sequelize.DataTypes);
+require('./models/user-inventory.js')(sequelize, Sequelize.DataTypes);
 
 
 const force = process.argv.includes('--force') || process.argv.includes('-f');
 
 sequelize.sync({ force }).then(async () => {
 	const shop = [
+		CurrencyShop.upsert({item_id: 1, item_name: 'Basic Pack', item_cost: 250 }),
+
 		CardData.upsert({ card_name: 'Bulbasaur', card_id: 1, card_rarity: 'Common'}),
         CardData.upsert({ card_name: 'Ivysaur', card_id: 2, card_rarity: 'Uncommon'}),
         CardData.upsert({ card_name: 'Venusaur ex', card_id: 3, card_rarity: 'Rare'}),
@@ -218,8 +224,8 @@ sequelize.sync({ force }).then(async () => {
         CardData.upsert({ card_name: 'P Zapdos ex', card_id: 202, card_rarity: 'Ultra'}),
         CardData.upsert({ card_name: 'P Erikas Invitation', card_id: 203, card_rarity: 'Ultra'}),
         CardData.upsert({ card_name: 'P Giovannis Charisma', card_id: 204, card_rarity: 'Ultra'})
-    ];
-    
+	];
+
 	await Promise.all(shop);
 	console.log('Database synced');
 

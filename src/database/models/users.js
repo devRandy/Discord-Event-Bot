@@ -1,16 +1,12 @@
 module.exports = (sequelize, DataTypes) => {
-	return sequelize.define('cards', {
-		card_name: {
+	return sequelize.define('users', {
+		user_id: {
 			type: DataTypes.STRING,
-			allowNull: false,
-		},
-		card_id: {
-			type: DataTypes.INTEGER,
-			defaultValue: 0,
 			primaryKey: true,
 		},
-        card_rarity: {
-			type: DataTypes.STRING,
+		balance: {
+			type: DataTypes.INTEGER,
+			defaultValue: 0,
 			allowNull: false,
 		},
 	}, {
