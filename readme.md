@@ -20,5 +20,4 @@ Run `npm run images`
 
 Event-Bot utilizes sqlite, which is a file-based relational database management system. To setup the database locally, please follow the steps outlined below:
 
-1. Run `npm run db:init` - this intializes the tables, and populates them based on what in in the database-init.js
-2. Run `npm run db:sync` - this connects the tables of the database based on primary and forigen keys
+1. Run `npm run db:init` - this intializes the tables and populates them based on what is in the database-init.js
