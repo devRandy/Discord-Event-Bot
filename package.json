@@ -16,7 +16,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "images": "node src/get-images",  
-    "db:init" : "node src/database/database-init",
+    "db:init" : "node src/database/database-init"
   },
   "repository": {
     "type": "git",
