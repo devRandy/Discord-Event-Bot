@@ -27,6 +27,11 @@ class CardClient {
         return cardList;
     }
 
+    async countCardsByRarity(rarity) {
+        let count = await this.c.count({ where: { card_rarity: rarity } });
+        return count;
+    }
+
 }
 
 module.exports = {

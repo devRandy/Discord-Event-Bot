@@ -50,6 +50,30 @@ class UserClient {
         }
     }
 
+    async decreaseUserFunds(userId, amount) {
+        await this.user.increment({ balance: -amount }, { where: { user_id: userId } });
+        console.log('Decreased user funds');
+
+    }
+
+    async increaseUserFunds(userId, amount) {
+        await this.user.increment({ balance: amount }, { where: { user_id: userId } });
+        console.log('Increased user funds');
+
+    }
+
+    async addCardToUser(userId, cardId) {
+        const userCard  = await this.userInv.findOne({where: { user_id: userId, card_id: cardId }});
+
+        if(userCard) {
+            console.log(`Increase ${cardId} by 1`);
+           return await this.userInv.increment({ amount: 1 }, { where: { user_id: userId, card_id: cardId } }); 
+        } else {
+            console.log(`Added ${cardId} to ${userId}`);
+            return this.userInv.create({ user_id: userId, card_id: cardId, amount: 1 });
+        }
+    }
+
 }
 
 
