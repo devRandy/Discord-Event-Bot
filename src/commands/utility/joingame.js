@@ -4,7 +4,6 @@
 
 const { SlashCommandBuilder } = require('discord.js');
 const { UserClient } = require('../../database/clients/user-client');
-const { codeBlock } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -19,11 +18,5 @@ module.exports = {
 			console.log(error);
 			await interaction.reply(`You have already joined the game.`);
 		});
-
-
-		// userClient.getUserById(userId).then( async (userObj) => {
-		// 	await interaction.reply(codeBlock('js', `${userObj.user_id}`));
-		// });
-		
 	},
 };

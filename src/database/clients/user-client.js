@@ -39,15 +39,22 @@ class UserClient {
     }
 
     async getUserInventory(userId) {
-        const i = this.userInv.findAll({
+        const cardList = [];
+        const i = await this.userInv.findAll({
             where: { user_id: userId }
         });
 
-        if (!i) {
-            return `You don't have any cards, dingus!`;
+
+        if(!i) {
+            //boogers
+        } else if (i.length === 1) {
+            cardList.push(i.toJSON());
         } else {
-            console.log('some cards');
+            for (let card of i) {
+                cardList.push(card.toJSON());
+            }
         }
+        return cardList;
     }
 
     async decreaseUserFunds(userId, amount) {

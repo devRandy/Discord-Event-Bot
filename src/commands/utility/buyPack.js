@@ -12,15 +12,14 @@ module.exports = {
 		const userClient = new UserClient();
 		try {
 			const user = await userClient.getUserById(userId);
-			if(user.balance) {
+			if (user.balance >= 250) {
 				const gen = new EmbedGenerator();
 				const pack = await gen.getEmbededBasePack();
 				userClient.decreaseUserFunds(userId, 250);
-				await interaction.reply({embeds: [...pack.embeds], files: [...pack.files] });
-				for(let id of pack.ids) {
+				await interaction.reply({ embeds: [...pack.embeds], files: [...pack.files] });
+				for (let id of pack.ids) {
 					await userClient.addCardToUser(userId, id);
 				}
-
 			} else {
 				await interaction.reply(`Not enough funds. Your current balance is $${user.balance}, and you need $250`);
 			}
