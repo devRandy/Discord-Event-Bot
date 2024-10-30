@@ -15,6 +15,9 @@ class BotClient extends Client {
     init() {
         this.once(Events.ClientReady, readyClient => {
             console.log(`Ready! Logged in as ${readyClient.user.tag}`);
+            this.user.setUsername('Ash Ketchup');
+            client.user.setAvatar('https://mir-s3-cdn-cf.behance.net/project_modules/1400/10f13510774061.560eadfde5b61.png');
+            client.user.setActivity(`Collect Em' All`);
             // this.scheduleMessage("element.title", "element.readabledate");
         });
         this.login(token);

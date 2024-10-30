@@ -23,7 +23,7 @@ class UserClient {
 
         } else {
             console.log(`User with ${userId} added to Users table.`)
-            return this.user.create({ user_id: userId, balance: 500 });
+            return this.user.create({ user_id: userId, balance: 5000 });
         }
 
     }
@@ -36,6 +36,13 @@ class UserClient {
 
         return newUser.toJSON();
 
+    }
+
+    async getAllUsers() {
+        const userList = await this.user.findAll();
+        if(userList) {
+
+        }
     }
 
     async getUserInventory(userId) {
