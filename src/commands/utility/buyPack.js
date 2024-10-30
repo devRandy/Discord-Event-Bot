@@ -1,17 +1,30 @@
 const { SlashCommandBuilder } = require('discord.js');
 const { EmbedGenerator } = require('../../card-pack/embed-gen');
+const { UserClient } = require('../../database/clients/user-client');
 
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('buypack')
-		.setDescription('Buys a basic pack of cards.'),
+		.setDescription('Buy a basic pack of cards.'),
 	async execute(interaction) {
-		//TODO: Check to see if users has correct amount of credits to purchase
-
-		const gen = new EmbedGenerator();
-		gen.getEmbededBasePack();
-		
-		await interaction.reply({embeds: [...gen.embeds], files: [...gen.files] });
+		const userId = interaction.user.id;
+		const userClient = new UserClient();
+		try {
+			const user = await userClient.getUserById(userId);
+			if (user.balance >= 250) {
+				const gen = new EmbedGenerator();
+				const pack = await gen.getEmbededBasePack();
+				userClient.decreaseUserFunds(userId, 250);
+				await interaction.reply({ embeds: [...pack.embeds], files: [...pack.files] });
+				for (let id of pack.ids) {
+					await userClient.addCardToUser(userId, id);
+				}
+			} else {
+				await interaction.reply(`Not enough funds. Your current balance is $${user.balance}, and you need $250`);
+			}
+		} catch (error) {
+			console.log(error);
+		}
 	},
 };

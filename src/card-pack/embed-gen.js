@@ -1,90 +1,52 @@
 const { AttachmentBuilder } = require('discord.js');
+const { PackGenerator } = require('./pack-gen');
 
 class EmbedGenerator {
 
     embeds;
     files;
+    packGen;
+    fields;
+    cardIDs
 
-    constructor(){
+    constructor() {
         this.embeds = [];
         this.files = [];
+        this.fields = [];
+        this.cardIDs = [];
+        this.packGen = new PackGenerator();
     }
-    
-    getEmbededBasePack() {
-        const file = new AttachmentBuilder('./downloads/SV3pt5_EN_1.png');
-		const file2 = new AttachmentBuilder('./downloads/SV3pt5_EN_2.png');
-		const file3 = new AttachmentBuilder('./downloads/SV3pt5_EN_3.png');
-		const file4 = new AttachmentBuilder('./downloads/SV3pt5_EN_4.png');
-        this.files.push(file);
-        this.files.push(file2);
-        this.files.push(file3);
-        this.files.push(file4);
-		const exampleEmbed = {
-            color: 0xFF0000,
-			title: 'Opend Base Pack',
-			url: 'http://google.com',
-            description: 'You opened a base pack - see which cards you drew!',
-            fields: [
-                {
-                    name: 'Card 1',
-                    value: 'Name',
-                    inline: true
-                },
-                {
-                    name: 'Card 2',
-                    value: 'Name',
-                    inline: true
-                },
-                {
-                    name: 'Card 3',
-                    value: 'Name',
-                    inline: true
-                },
-                {
-                    name: 'Card 4',
-                    value: 'Name',
-                    inline: true
-                },
-            ],
-			image: {
-				url: 'attachment://SV3pt5_EN_1.png',
-			},
 
-		};
-		const exampleEmbed2 = {
-			title: 'Some title',
-			url: 'http://google.com',
-            fields: [
-                {
-                    name: 'Card 2',
-                    value: 'Name',
-                },
-            ],
-			image: {
-				url: 'attachment://SV3pt5_EN_2.png',
-			},
-			
-		};
-		const exampleEmbed3 = {
-			title: 'Some title',
-			url: 'http://google.com',
-			image: {
-				url: 'attachment://SV3pt5_EN_3.png',
-			},
-			
-		};
-		const exampleEmbed4 = {
-			title: 'Some title',
-			url: 'http://google.com',
-			image: {
-				url: 'attachment://SV3pt5_EN_4.png',
-			},
-			
-		};
-        this.embeds.push(exampleEmbed);
-        this.embeds.push(exampleEmbed2);
-        this.embeds.push(exampleEmbed3);
-        this.embeds.push(exampleEmbed4);
+    async getEmbededBasePack() {
+        const cards = await this.packGen.generateBasePack();
+
+        let count = 1;
+        for (let card of cards) {
+            const file = new AttachmentBuilder(`./downloads/SV3pt5_EN_${card.card_id}.png`);
+            const field = {
+                name: `Card #${count}`,
+                value: `${card.card_name} ${card.card_id}/204`,
+                inline: true
+            }
+            this.fields.push(field);
+            this.files.push(file);
+            this.cardIDs.push(card.card_id);
+            count++;
+        }
+
+        const embedTemmplate = {
+            color: 0xFF0000,
+            title: 'Opened Base Pack',
+            description: 'You opened a base pack - see which cards you drew!',
+            fields: this.fields,
+            // image: {
+            // 	url: 'attachment://SV3pt5_EN_1.png',
+            // },
+
+        };
+
+        this.embeds.push(embedTemmplate);
+        return { embeds: this.embeds, files: this.files, ids: this.cardIDs };
     }
 
 }
