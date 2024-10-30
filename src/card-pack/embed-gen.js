@@ -9,7 +9,7 @@ class EmbedGenerator {
     fields;
     cardIDs
 
-    constructor(){
+    constructor() {
         this.embeds = [];
         this.files = [];
         this.fields = [];
@@ -18,11 +18,10 @@ class EmbedGenerator {
     }
 
     async getEmbededBasePack() {
-        
         const cards = await this.packGen.generateBasePack();
 
         let count = 1;
-        for(let card of cards) {
+        for (let card of cards) {
             const file = new AttachmentBuilder(`./downloads/SV3pt5_EN_${card.card_id}.png`);
             const field = {
                 name: `Card #${count}`,
@@ -35,20 +34,19 @@ class EmbedGenerator {
             count++;
         }
 
-
-		const embedTemmplate = {
+        const embedTemmplate = {
             color: 0xFF0000,
-			title: 'Opened Base Pack',
+            title: 'Opened Base Pack',
             description: 'You opened a base pack - see which cards you drew!',
             fields: this.fields,
-			// image: {
-			// 	url: 'attachment://SV3pt5_EN_1.png',
-			// },
+            // image: {
+            // 	url: 'attachment://SV3pt5_EN_1.png',
+            // },
 
-		};
-		
+        };
+
         this.embeds.push(embedTemmplate);
-        return {embeds: this.embeds, files: this.files, ids: this.cardIDs};
+        return { embeds: this.embeds, files: this.files, ids: this.cardIDs };
     }
 
 }

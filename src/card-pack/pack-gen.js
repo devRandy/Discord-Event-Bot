@@ -49,7 +49,6 @@ class PackGenerator {
     }
 }
 
-
 module.exports = {
     PackGenerator
 }
