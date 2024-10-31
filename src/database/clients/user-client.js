@@ -58,6 +58,11 @@ class UserClient {
         return cardList;
     }
 
+    async getUserBalance(userId) {
+        const user = await this.getUserById(userId);
+        return user.balance;
+    }
+
     async decreaseUserFunds(userId, amount) {
         await this.user.increment({ balance: -amount }, { where: { user_id: userId } });
         console.log('Decreased user funds');
