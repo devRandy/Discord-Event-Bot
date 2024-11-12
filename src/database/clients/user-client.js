@@ -30,7 +30,10 @@ class UserClient {
         const newUser = await this.user.findOne({
             where: { user_id: userId }
         });
-        return newUser.toJSON();
+        if(newUser) {
+            return newUser.toJSON();
+        }
+        return false;
     }
 
     async getAllUsers() {
@@ -58,6 +61,11 @@ class UserClient {
         return cardList;
     }
 
+    async getUserBalance(userId) {
+        const user = await this.getUserById(userId);
+        return user.balance;
+    }
+
     async decreaseUserFunds(userId, amount) {
         await this.user.increment({ balance: -amount }, { where: { user_id: userId } });
         console.log('Decreased user funds');
@@ -78,6 +86,23 @@ class UserClient {
             console.log(`Added ${cardId} to ${userId}`);
             return this.userInv.create({ user_id: userId, card_id: cardId, amount: 1 });
         }
+    }
+
+    async removeCardFromUser(userId, cardId) {
+        const userCard = await this.userInv.findOne({ where: { user_id: userId, card_id: cardId } }); 
+
+        if(!userCard) {
+            return false;
+        }
+
+        const cardCount = userCard.toJSON().amount;
+
+        if(cardCount > 1) {
+            return await this.userInv.increment({ amount: -1 }, { where: { user_id: userId, card_id: cardId } });
+        } else if( cardCount === 1) {
+            return await this.userInv.destroy({ where: { user_id: userId, card_id: cardId } });
+        }
+        
     }
 
 }

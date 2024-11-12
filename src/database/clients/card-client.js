@@ -16,6 +16,15 @@ class CardClient {
         return card;
     }
 
+    async getCardByName(cardName) {
+        let card = await this.c.findOne({ where: { card_name: cardName } });
+        if(!card) {
+            return false;
+        }
+        card = card.toJSON();
+        return card;
+    }
+
     async getAllCardsByRarity(rarity) {
         const cardList = [];
         let cards = await this.c.findAll({ where: { card_rarity: rarity } });
