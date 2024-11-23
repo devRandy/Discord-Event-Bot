@@ -31,18 +31,32 @@ class PackGenerator {
     }
 
     rollRarityGroup() {
-        const roll = Math.floor(Math.random() * 10) + 1;
+        const roll = Math.floor(Math.random() * 20) + 1;
         switch (roll) {
-            case 10:
+            case 20:
+            case 19:
                 return RARITY_GROUP.ultra;
-            case 9:
+            case 18:
+            case 17:        
+            case 16:
                 return RARITY_GROUP.super;
+            case 15:
+            case 14:
+            case 13:
+            case 12:
+            case 11:
+                return RARITY_GROUP.rare;
+            case 10:
+            case 9:
             case 8:
             case 7:
-                return RARITY_GROUP.rare;
+                return RARITY_GROUP.uncommon;
             case 6:
             case 5:
-                return RARITY_GROUP.uncommon;
+            case 4:
+            case 3:
+            case 2:
+            case 1:
             default:
                 return RARITY_GROUP.common;
         }
