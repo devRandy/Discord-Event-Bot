@@ -15,7 +15,7 @@ module.exports = {
 		const cardStrings = [];
 		for (card of cardList) {
 			const c = await cardClient.getCardById(card.card_id);
-			const cString = `Name: ${c.card_name} ${card.card_id}/204 Total Owned: ${card.amount} \n`;
+			const cString = `\nName: ${c.card_name} ${card.card_id}/204 Total Owned: ${card.amount}`;
 			cardStrings.push(cString);
 		}
 		await interaction.reply(codeBlock('js', cardStrings.sort()));
