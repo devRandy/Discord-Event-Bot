@@ -1,4 +1,4 @@
-const { Cards } = require('../dbObjects')
+const { Cards } = require('../db-objects')
 
 /**
  * Client for Cards DB Table
