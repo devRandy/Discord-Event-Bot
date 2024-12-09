@@ -1,4 +1,4 @@
-const { Users, UserInventory } = require('../dbObjects')
+const { Users, UserInventory } = require('../db-objects')
 
 /**
  * Client for Users and UserInvetory DB Tables

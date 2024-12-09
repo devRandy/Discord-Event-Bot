@@ -2,7 +2,7 @@ const { Client, Collection, Events, GatewayIntentBits, REST, Routes } = require(
 const { clientId, guildId, token } = require('../auth.json');
 const cron = require("node-cron");
 const { CHANNELS } = require('./constants');
-const { BotUtils } = require('./Utils');
+const { BotUtils } = require('./bot-utils');
 
 class BotClient extends Client {
     commandList;

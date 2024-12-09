@@ -1,4 +1,4 @@
-const { BotClient } = require('./src/BotClient');
+const { BotClient } = require('./src/bot-client');
 
 client = new BotClient();
 
