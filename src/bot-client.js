@@ -73,16 +73,11 @@ class BotClient extends Client {
 
     scheduleMessage() {
         const channel = client.channels.cache.get(CHANNELS.bot_test);
-        cron.schedule("0 8 * * 1", function () {
-            console.log("running a task every monday at 8am");
-        });
-        cron.schedule("0 16 * * 1", function () {
-            console.log("running a task every monday at 4pm");
-        });
-        cron.schedule("*/10 * * * * *", function () {
+        cron.schedule("0 9 * * *", function () {
             BotUtils.payAllUsers();
+            const everyone = '@everyone'
             channel.send({
-                content: 'All users have been given their daily 500 credits!',
+                content: `${everyone} All users have been given their daily 500 credits!`,
                 allowedMentions: { roles: ['1208516988285227068'] },
             });
         });

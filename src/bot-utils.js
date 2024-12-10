@@ -28,7 +28,9 @@ class BotUtils {
         const userClient = new UserClient();
         const userList = await userClient.getAllUsers();
         if(userList) {
-            console.log(userList);
+            for(let user of userList) {
+                userClient.increaseUserFunds(user.user_id, 500);
+            }
         } else {
             console.log('Failed to get userlist');
         }
