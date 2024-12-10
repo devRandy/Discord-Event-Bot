@@ -37,9 +37,14 @@ class UserClient {
     }
 
     async getAllUsers() {
+        const listOfUsers = [];
         const userList = await this.user.findAll();
         if (userList) {
-            //TODO: Return full user list
+
+            for(let user of userList) {
+                listOfUsers.push(user.toJSON());
+            }
+            return listOfUsers;
         }
     }
 
