@@ -18,7 +18,7 @@ class BotClient extends Client {
             this.user.setUsername('Ash Ketchup');
             client.user.setAvatar('https://mir-s3-cdn-cf.behance.net/project_modules/1400/10f13510774061.560eadfde5b61.png');
             client.user.setActivity(`Collect Em' All`);
-            // this.scheduleMessage("element.title", "element.readabledate");
+            this.scheduleMessage("element.title", "element.readabledate");
         });
         this.login(token);
         this.setCommandList(BotUtils.getCommands());
@@ -73,15 +73,11 @@ class BotClient extends Client {
 
     scheduleMessage() {
         const channel = client.channels.cache.get(CHANNELS.bot_test);
-        cron.schedule("0 8 * * 1", function () {
-            console.log("running a task every monday at 8am");
-        });
-        cron.schedule("0 16 * * 1", function () {
-            console.log("running a task every monday at 4pm");
-        });
-        cron.schedule("*/10 * * * * *", function () {
+        cron.schedule("0 9 * * *", function () {
+            BotUtils.payAllUsers();
+            const everyone = '@everyone'
             channel.send({
-                content: '<@&1208516988285227068> gamer time!',
+                content: `${everyone} All users have been given their daily 500 credits!`,
                 allowedMentions: { roles: ['1208516988285227068'] },
             });
         });

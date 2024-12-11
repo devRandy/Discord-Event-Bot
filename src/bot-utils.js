@@ -1,5 +1,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
+const { UserClient } = require('./database/clients/user-client');
+
 
 class BotUtils {
     static getCommands() {
@@ -20,6 +22,18 @@ class BotUtils {
             }
         }
         return commands;
+    }
+
+    static async payAllUsers() {
+        const userClient = new UserClient();
+        const userList = await userClient.getAllUsers();
+        if(userList) {
+            for(let user of userList) {
+                userClient.increaseUserFunds(user.user_id, 500);
+            }
+        } else {
+            console.log('Failed to get userlist');
+        }
     }
 }
 
