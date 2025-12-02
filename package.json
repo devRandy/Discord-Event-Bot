@@ -5,7 +5,7 @@
   "main": "bot.js",
   "author": "Randy",
   "dependencies": {
-    "discord.js": "^14.16.3",
+    "discord.js": "^14.25.1",
     "dotenv": "^16.4.5",
     "node-cron": "^3.0.3",
     "sequelize": "^6.37.4",
