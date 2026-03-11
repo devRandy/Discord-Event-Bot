@@ -8,7 +8,7 @@
     "discord.js": "^14.25.1",
     "dotenv": "^16.4.5",
     "node-cron": "^3.0.3",
-    "sequelize": "^6.37.4",
+    "sequelize": "^6.37.8",
     "sqlite3": "^5.1.7",
     "winston": "^3.2.1",
     "xmlhttprequest": "^1.8.0"
