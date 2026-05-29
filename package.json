@@ -5,11 +5,11 @@
   "main": "bot.js",
   "author": "Randy",
   "dependencies": {
-    "discord.js": "^14.25.1",
+    "discord.js": "^14.26.4",
     "dotenv": "^16.4.5",
     "node-cron": "^3.0.3",
     "sequelize": "^6.37.8",
-    "sqlite3": "^5.1.7",
+    "sqlite3": "^6.0.1",
     "winston": "^3.2.1",
     "xmlhttprequest": "^1.8.0"
   },
